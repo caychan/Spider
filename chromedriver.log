@@ -1,0 +1,16 @@
+[0.000][INFO]:      ChromeDriver 23.0.1240.0
+[1.056][FINE]:      Initializing session with capabilities {
+   "browserName": "chrome",
+   "chrome.prefs": {
+      "profile.default_content_settings": {
+         "images": 2
+      }
+   },
+   "platform": "ANY",
+   "version": ""
+}
+
+[1.056][INFO]:      Launching chrome: "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --enable-logging --log-level=1 --disable-hang-monitor --disable-prompt-on-repost --dom-automation --full-memory-crash-report --no-default-browser-check --no-first-run --disable-background-networking --disable-sync --disable-translate --disable-web-resources --safebrowsing-disable-auto-update --safebrowsing-disable-download-protection --disable-client-side-phishing-detection --disable-component-update --disable-default-apps --ignore-certificate-errors about:blank
+[46.103][SEVERE]:   Failed to initialize connection
+[56.168][WARNING]:  Chrome still running, terminating...
+[56.168][INFO]:     Chrome shutdown
