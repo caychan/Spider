@@ -1,20 +1,19 @@
 package downloader;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.apache.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.atomic.AtomicInteger;
+import utils.UtilsConstants;
 
 /**
  * @author code4crafter@gmail.com <br>
@@ -61,38 +60,11 @@ class WebDriverPool {
         if (webDriverList.size() < capacity) {
             synchronized (webDriverList) {
                 if (webDriverList.size() < capacity) {
-/*                	Map<String, Object> contentSettings = new HashMap<String, Object>();
-                	contentSettings.put("images", 2);
-
-                	Map<String, Object> preferences = new HashMap<String, Object>();
-                	preferences.put("profile.default_content_settings", contentSettings);
-
-                	DesiredCapabilities caps = DesiredCapabilities.chrome();
-                	caps.setCapability("chrome.prefs", preferences);
-//                	WebDriver driver = new ChromeDriver(caps);*/
-                	
-/*                	ChromeOptions options = new ChromeOptions();
-                	options.
-                	    options.prefs = new Dictionary<string, object> {
-                	        { "profile.default_content_settings", new Dictionary<string, object>() { "images", 2 } }
-                	    };
-                	    var driver = new ChromeDriver(options);*/
-
-/*                	
-                	Map<String, Object> contentSettings = new HashMap<String, Object>();
-                	contentSettings.put("images", 2);
-                	HashMap<String, Object> preferences = new HashMap<String, Object>();
-                	preferences.put("profile.default_content_settings", contentSettings);
-                	    ChromeOptions options = new ChromeOptions();
-                	    options.addArguments("profile.default_content_settings");
-                	    options.addArguments(preferences);
-//                	    ((Object) options).AddUserProfilePreference("profile.default_content_settings", "{\"images\":2");
-*/  
                 	
                 	// 屏蔽图片               	
   					ChromeOptions options = new ChromeOptions();
 					//use the block image extension to prevent images from downloading.
-					options.addExtensions(new File("F:\\程序\\block_image_1_1.crx"));
+					options.addExtensions(new File(UtilsConstants.IMG_CRX_PATH));
                     ChromeDriver e = new ChromeDriver(options);
                		
                 	

@@ -24,7 +24,7 @@ public class BloomFilterDuplicateRemover implements DuplicateRemover {
     private AtomicInteger counter;
 
     public BloomFilterDuplicateRemover(int expectedInsertions) {
-        this(expectedInsertions, 0.01);
+        this(expectedInsertions, 0.001);
     }
 
     /**

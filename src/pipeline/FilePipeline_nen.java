@@ -65,6 +65,8 @@ public class FilePipeline_nen extends FilePersistentBase implements Pipeline {
     	String date = "";
         boolean flag = true;
         String content = resultItems.get("content").toString();
+        
+        //如果内容长度小于20，则认为给定的xpath没有能抓到该页的内容，把该页写入content.txt里
 		if (content.length() < 20) {
 			flag = false;
             try {
@@ -78,6 +80,7 @@ public class FilePipeline_nen extends FilePersistentBase implements Pipeline {
             return ;
 		}
 		
+        //如果标题长度小于8，则认为给定的xpath没有能抓到该页的标题，把该页写入title.txt里
 		String title = resultItems.get("title").toString();
 		if (title.length() < 8) {
 			flag = false;

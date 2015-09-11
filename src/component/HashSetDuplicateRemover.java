@@ -17,7 +17,7 @@ public class HashSetDuplicateRemover implements DuplicateRemover {
     public boolean isDuplicate(Request request, Task task) {
         return !urls.add(getUrl(request));
     }
-
+    
     protected String getUrl(Request request) {
         return request.getUrl();
     }
@@ -29,10 +29,12 @@ public class HashSetDuplicateRemover implements DuplicateRemover {
 
     @Override
     public int getTotalRequestsCount(Task task) {
-        return urls.size();
-    }
-    //自己加的
-    public int getTotalRequestsCount() {
     	return urls.size();
     }
+    
+    public int getTotalRequestsCount() {
+    	//输出的都是0
+    	return urls.size();
+    }
+    
 }

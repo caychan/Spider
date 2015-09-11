@@ -2,24 +2,16 @@ package downloader;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.jsoup.Jsoup;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import selector.Html;
 import selector.PlainText;
-import utils.UrlUtils;
 //import clawer.*;
 import clawer.Page;
 import clawer.Request;
@@ -77,7 +69,7 @@ public class SeleniumDownloader implements Downloader, Closeable {
 //        ((JavascriptExecutor) webDriver).executeScript("scroll(0," + (i * 500) + ");");
      	
         //最长等待30秒到页面加载完成
-//        webDriver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        webDriver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 
 /*        if (request.getUrl().matches("http://renren\\.com")) {
         	webDriver.findElement(By.id("email")).sendKeys("zichen0322@yahoo.cn");
@@ -97,7 +89,7 @@ public class SeleniumDownloader implements Downloader, Closeable {
 		}*/
         
 
-        if (request.getUrl().matches("https://www.facebook\\.com/?")) {
+/*        if (request.getUrl().matches("https://www.facebook\\.com/?")) {
         	webDriver.findElement(By.id("email")).sendKeys("email_wl@163.com");
         	webDriver.findElement(By.id("pass")).sendKeys("quantianhou");
         	webDriver.findElement(By.id("loginbutton")).click();
@@ -108,7 +100,7 @@ public class SeleniumDownloader implements Downloader, Closeable {
         if (request.getUrl().contains("scontent")) {
         	System.out.println("photo");
         	System.out.println(webDriver.getPageSource());
-        }
+        }*/
         
 
         try {

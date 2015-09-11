@@ -39,9 +39,6 @@ import com.google.common.collect.Sets;
 
 /**
  * The http downloader based on HttpClient.
- *
- * @author code4crafter@gmail.com <br>
- * @since 0.1.0
  */
 @ThreadSafe
 public class HttpClientDownloader extends AbstractDownloader {
@@ -144,7 +141,7 @@ public class HttpClientDownloader extends AbstractDownloader {
                 .setConnectTimeout(site.getTimeOut())
                 .setCookieSpec(CookieSpecs.BEST_MATCH);
         if (site.getHttpProxyPool() != null && site.getHttpProxyPool().isEnable()) {
-			HttpHost host = site.getHttpProxyFromPool();
+            HttpHost host = site.getHttpProxyFromPool();
 			requestConfigBuilder.setProxy(host);
 			request.putExtra(Request.PROXY, host);
 		}
@@ -204,7 +201,7 @@ public class HttpClientDownloader extends AbstractDownloader {
     protected String getHtmlCharset(HttpResponse httpResponse, byte[] contentBytes) throws IOException {
         String charset;
         // charset
-        // 1銆乪ncoding in http header Content-Type
+        // 1、encoding in http header Content-Type
         String value = httpResponse.getEntity().getContentType().getValue();
         charset = UrlUtils.getCharset(value);
         if (StringUtils.isNotBlank(charset)) {
@@ -214,12 +211,12 @@ public class HttpClientDownloader extends AbstractDownloader {
         // use default charset to decode first time
         Charset defaultCharset = Charset.defaultCharset();
         String content = new String(contentBytes, defaultCharset.name());
-        // 2銆乧harset in meta
+        // 2、charset in meta
         if (StringUtils.isNotEmpty(content)) {
             Document document = Jsoup.parse(content);
             Elements links = document.select("meta");
             for (Element link : links) {
-                // 2.1銆乭tml4.01 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+                // 2.1、html4.01 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
                 String metaContent = link.attr("content");
                 String metaCharset = link.attr("charset");
                 if (metaContent.indexOf("charset") != -1) {
@@ -227,7 +224,7 @@ public class HttpClientDownloader extends AbstractDownloader {
                     charset = metaContent.split("=")[1];
                     break;
                 }
-                // 2.2銆乭tml5 <meta charset="UTF-8" />
+                // 2.2、html5 <meta charset="UTF-8" />
                 else if (StringUtils.isNotEmpty(metaCharset)) {
                     charset = metaCharset;
                     break;
@@ -235,7 +232,7 @@ public class HttpClientDownloader extends AbstractDownloader {
             }
         }
         logger.debug("Auto get charset: {}", charset);
-        // 3銆乼odo use tools as cpdetector for content decode
+        // 3、todo use tools as cpdetector for content decode
         return charset;
     }
 }

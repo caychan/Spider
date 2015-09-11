@@ -14,7 +14,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.entity.BufferedHttpEntity;
 
 import pipeline.SaveToFile;
-import pipeline.SaveToFile_Old;
 
 public class DBUtils {
 	Connection conn = null;
@@ -68,13 +67,13 @@ public class DBUtils {
 		        String selectInResource = "select * from resource where resource_url = '" + url + "'";
 				stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 				rs = stmt.executeQuery(selectInResource);
-				if (rs.next()) { //´æÔÚurl
-					if (rs.getString("signature").equals(signature)) { //Êý¾Ý¿âÖÐ¸ÃurlµÄsignatureºÍÏÖÔÚÅÀÈ¥µÄurlÄÚÈÝÏàÍ¬
-						System.out.println( "´æÔÚ¸ÃurlÇÒÄÚÈÝÃ»±ä");
+				if (rs.next()) { //ï¿½ï¿½ï¿½ï¿½url
+					if (rs.getString("signature").equals(signature)) { //ï¿½ï¿½Ý¿ï¿½ï¿½Ð¸ï¿½urlï¿½ï¿½signatureï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¥ï¿½ï¿½urlï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¬
+						System.out.println( "ï¿½ï¿½ï¿½Ú¸ï¿½urlï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½");
 						//do nothing
-					} else{ //Èç¹ûurlÄÚÈÝÒÑ±ä£¬¸üÐÂÐÅÏ¢
+					} else{ //ï¿½ï¿½ï¿½urlï¿½ï¿½ï¿½ï¿½ï¿½Ñ±ä£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 					 	path = stf.saveToLocal(entity, taskId);
-						System.out.println("´æÔÚ¸Ãurlµ«ÄÚÈÝÒÑ±ä");
+						System.out.println("ï¿½ï¿½ï¿½Ú¸ï¿½urlï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ±ï¿½");
 						rs.updateInt("task_id", taskId);
 						rs.updateString("resource_pattern", pattern);    
 						rs.updateString("time_stamp", timeStamp);  
@@ -82,11 +81,11 @@ public class DBUtils {
 						rs.updateString("signature", signature);
 						rs.updateRow();
 					}
-				} else{ //Êý¾Ý¿âÖÐÃ»ÓÐ¸Ãurl
-					System.out.println("²»´æÔÚ¸Ãurl");
+				} else{ //ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½Ã»ï¿½Ð¸ï¿½url
+					System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½Ú¸ï¿½url");
 					path = stf.saveToLocal(entity, taskId);
 					String getSet = "select * from resource order by resource_id DESC limit 1";
-					closeResultSet(rs);//²»¼ÓÕâ¾ä£¬ÏÂÃæ¾Í»áÓÐ¾¯¸æ¡°Resource leak: 'rs' is not closed at this location¡±
+					closeResultSet(rs);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ä£¬ï¿½ï¿½ï¿½ï¿½Í»ï¿½ï¿½Ð¾ï¿½ï¿½æ¡°Resource leak: 'rs' is not closed at this locationï¿½ï¿½
 //					System.out.println("------------------------------------------------------------------");
 					rs = stmt.executeQuery(getSet);
 					rs.moveToInsertRow();
@@ -125,15 +124,15 @@ public class DBUtils {
 			ResultSet rs = null;
 			
 			try {
-				//ResultSet.TYPE_SCROLL_INSENSITIVE:Ë«Ïò¹ö¶¯£¬µ«²»¼°Ê±¸üÐÂ£¬¾ÍÊÇÈç¹ûÊý¾Ý¿âÀïµÄÊý¾ÝÐÞ¸Ä¹ý£¬²¢²»ÔÚResultSetÖÐ·´Ó¦³öÀ´¡£   
+				//ResultSet.TYPE_SCROLL_INSENSITIVE:Ë«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Â£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸Ä¹ï¿½ï¿½ï¿½ï¿½ResultSetï¿½Ð·ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½   
 				stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-				//Ö´ÐÐ¸ÃsqlÓï¾ä
+				//Ö´ï¿½Ð¸ï¿½sqlï¿½ï¿½ï¿½
 				rs = stmt.executeQuery(getSet);		
-				//±éÀúµÃµ½µÄResultSet
+				//ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½ResultSet
 				while(rs.next()){	
 					if(isEqual(rs.getString("start_url").trim(), url.trim())){
 //						System.out.println("same domain");
-						if (timeToCount) {	//Èç¹û¿¼ÂÇÊ±¼ä¼ä¸ô
+						if (timeToCount) {	//ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
 							String now_time = NumberUtils.getTime();
 							String last_time = rs.getString("time_stamp");
 							
@@ -150,10 +149,10 @@ public class DBUtils {
 								flag = false;
 								break;
 							}
-						} else {//²»¿¼ÂÇÊ±¼ä¼ä¸ô
+						} else {//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
 							flag = true;
 						}
-						break; //¶ÔÒ»¸öurlÖ»¿´×î½üÅÀµÄÒ»´Î¡£
+						break; //ï¿½ï¿½Ò»ï¿½ï¿½urlÖ»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Î¡ï¿½
 					}	//contains domain
 				}
 			} catch (Exception e) {
@@ -163,13 +162,13 @@ public class DBUtils {
 				closeResultSet(rs);
 			}
 			return flag;
-		} else {	//Èç¹ûÃ»ÓÐ½¨Á¢Êý¾Ý¿âÁ¬½Ó£¬°´ÖØ¸´´¦Àí£¬¼´²»Ö´ÐÐ¸ÃÈÎÎñ
+		} else {	//ï¿½ï¿½ï¿½Ã»ï¿½Ð½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½ï¿½Ó£ï¿½ï¿½ï¿½ï¿½Ø¸ï¿½ï¿½ï¿½ï¿½?ï¿½ï¿½ï¿½ï¿½Ö´ï¿½Ð¸ï¿½ï¿½ï¿½ï¿½ï¿½
 			closeConn(conn);
 			return true;
 		}
 	}
 	
-	//ÅÐ¶ÏÁ½¸öurlÊÇ·ñÏàÍ¬
+	//ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½urlï¿½Ç·ï¿½ï¿½ï¿½Í¬
 	private boolean isEqual(String dbStr, String str){
 		if (dbStr.equalsIgnoreCase(str)) {
 			return true;
@@ -197,16 +196,16 @@ public class DBUtils {
 			String timeStamp = NumberUtils.getTime();
 			try {
 				String sql = "INSERT INTO taskinfo(start_url, login_username, login_password, description, time_stamp) VALUES(?, ?, ?, ?, ?);";
-				PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);//´«Èë²ÎÊý£ºStatement.RETURN_GENERATED_KEYS
+				PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Statement.RETURN_GENERATED_KEYS
 				pstmt.setString(1, url);
 				pstmt.setString(2, username);
 				pstmt.setString(3, password);
 				pstmt.setString(4, description);
 				pstmt.setString(5, timeStamp);
 				pstmt.executeUpdate();
-				ResultSet rs = pstmt.getGeneratedKeys(); //»ñÈ¡½á¹û   
+				ResultSet rs = pstmt.getGeneratedKeys(); //ï¿½ï¿½È¡ï¿½ï¿½ï¿½   
 				if (rs.next()) {
-					id = rs.getInt(1);//È¡µÃID
+					id = rs.getInt(1);//È¡ï¿½ï¿½ID
 				} 
 			} catch (SQLException e) {
 				e.printStackTrace();

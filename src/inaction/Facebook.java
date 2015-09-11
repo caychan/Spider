@@ -5,7 +5,7 @@ import processor.PageProcessor;
 import clawer.Page;
 import clawer.Site;
 import clawer.Spider;
-import downloader.HttpClientDownloader;
+import downloader.HttpClientDownloader_old;
 import downloader.SeleniumDownloader;
 
 public class Facebook implements PageProcessor  {

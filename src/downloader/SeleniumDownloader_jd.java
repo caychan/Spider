@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -43,25 +44,7 @@ public class SeleniumDownloader_jd implements Downloader, Closeable {
      *
      * @param chromeDriverPath
      */
-    public SeleniumDownloader_jd(String chromeDriverPath) {
-/*    	Map<String, Object> contentSettings = new HashMap<String, Object>();
-    	contentSettings.put("images", 2);
-
-    	Map<String, Object> preferences = new HashMap<String, Object>();
-    	preferences.put("profile.default_content_settings", contentSettings);
-
-    	DesiredCapabilities caps = DesiredCapabilities.chrome();
-    	caps.setCapability("chrome.prefs", preferences);
-    	WebDriver driver = new ChromeDriver(caps);
-    	
-        System.setProperty("webdriver.chrome.driver", "files\\chromedriver.exe");
-        File file = new File ("files\\youtube.crx");
-        ChromeOptions options = new ChromeOptions();
-        options.addExtensions(file);
-        WebDriver driver = new ChromeDriver(options);
-        driver.get("http://www.baidu.com/");
-    	*/
-    	
+    public SeleniumDownloader_jd(String chromeDriverPath) { 	
         System.getProperties().setProperty("webdriver.chrome.driver", chromeDriverPath);
     }
 
@@ -89,6 +72,43 @@ public class SeleniumDownloader_jd implements Downloader, Closeable {
         }
         logger.info("downloading page " + request.getUrl());
         webDriver.get(request.getUrl());
+        
+        
+        
+        webDriver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+    	
+    	WebElement element = null;
+    	By selector = By.xpath("//a[@id='comment_tab']");
+    	//有时出现找不到的情况，抛出no such element错误导致程序中止
+    	int retries = 0;
+    	boolean exist = false;
+		while (retries++ < 5) {
+			exist = isWebElementExist(webDriver, selector);
+			if (exist) {
+				break;
+			}
+			webDriver.navigate().refresh();
+		}
+    	
+    	if (exist) {
+    		element = webDriver.findElement(selector);
+        	element.click();
+        	WebDriverWait wait = new WebDriverWait(webDriver, 10);
+        	wait.until(new ExpectedCondition<WebElement>() {
+        		@Override
+        		public WebElement apply(WebDriver d) {
+                	By selector = By.id("type_1");
+    				boolean exists = isWebElementExist(d, selector);
+                	if (exists) {
+                		return d.findElement(By.id("type_1"));
+					} else {
+						return null;
+					}
+        		}
+        	});
+		} 
+        
+        
       
         try {
             Thread.sleep(sleepTime);
@@ -133,4 +153,13 @@ public class SeleniumDownloader_jd implements Downloader, Closeable {
     public void close() throws IOException {
         webDriverPool.closeAll();
     }
+    
+	private boolean isWebElementExist(WebDriver driver, By selector) {
+		try {
+			driver.findElement(selector);
+			return true;
+		} catch (NoSuchElementException e) {
+			return false;
+		}
+	}
 }

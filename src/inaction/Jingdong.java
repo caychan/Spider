@@ -14,6 +14,7 @@ import pipeline.ConsolePipeline;
 import pipeline.FilePipeline;
 import pipeline.FilePipeline_jd;
 import processor.PageProcessor;
+import utils.UtilsConstants;
 import clawer.Page;
 import clawer.Site;
 import clawer.Spider;
@@ -137,7 +138,7 @@ public class Jingdong implements PageProcessor {
 //        		.addPipeline(new ConsolePipeline())
         		.addPipeline(new FilePipeline_jd("F:\\Clawer\\jd\\jingdong.csv"))
 //        		.setDownloader(new HttpClientDownloader())
-        		.setDownloader(new SeleniumDownloader_jd("F:\\程序\\chromedriver\\chromedriver.exe"))
+        		.setDownloader(new SeleniumDownloader_jd(UtilsConstants.CHROMEDRIVER_PATH))
 //        		.thread(10)
         		.run();
     }

@@ -2,7 +2,6 @@ package processor;
 
 import clawer.Page;
 import clawer.Site;
-import downloader.Downloader;
 
 /**
  * Interface to be implemented to customize a crawler.<br>

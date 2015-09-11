@@ -3,20 +3,13 @@ package downloader;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.openqa.jetty.html.Break;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import selector.Html;
 import selector.PlainText;
@@ -204,8 +197,6 @@ public class SeleniumDownloader_ali implements Downloader, Closeable {
 		} catch (NoSuchElementException e) {
 			return false;
 		}
-	
-	
 	}
 
 }

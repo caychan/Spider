@@ -2,9 +2,12 @@ package inaction;
 
 import java.util.List;
 
+
+
 import pipeline.ConsolePipeline;
 import pipeline.FilePipeline;
 import processor.PageProcessor;
+import utils.UtilsConstants;
 import clawer.Page;
 import clawer.Site;
 import clawer.Spider;
@@ -14,17 +17,7 @@ import downloader.SeleniumDownloader;
 public class Jd implements PageProcessor, Task  {
 
     private Site site;
-//    private Downloader downloader = new HttpClientDownloader();
     
-    
-/*    http://book.jd.com/children.html
-    	http://e.jd.com/ebook.html
-    		http://e.jd.com/network.html
-    			http://mvd.jd.com/music.html
-    				http://mvd.jd.com/
-    					http://e.jd.com/ebook.html
-    						http://book.jd.com/children3-6.html
-*/
     @Override
     public void process(Page page) {
     	//如果不是评论页，取url。如果是评论页，取数据
@@ -62,9 +55,6 @@ public class Jd implements PageProcessor, Task  {
 			if (page.getResultItems().get("商品名称")==null){
 				page.setSkip(true);
 			}
-			/* else {
-		        page = downloader.download(page.getRequest(), this);
-		    }*/
 			page.putField("商品价格", 
 					page.getHtml().xpath("//*[@id='summary-price']/div[2]/strong/text()").toString());
 			String category = page.getHtml().xpath("//*[@id='book']/div[4]/div[1]/strong/a/text()").toString();
@@ -119,9 +109,9 @@ public class Jd implements PageProcessor, Task  {
         		.addUrl(url)
 //        		.addPipeline(new DBPipeline())
         		.addPipeline(new ConsolePipeline())
-        		.addPipeline(new FilePipeline("F:\\京东"))
+        		.addPipeline(new FilePipeline("F:\\Clawer\\京东.txt"))
 //        		.setDownloader(new HttpClientDownloader())
-        		.setDownloader(new SeleniumDownloader("F:\\程序\\chromedriver\\chromedriver.exe"))
+        		.setDownloader(new SeleniumDownloader(UtilsConstants.CHROMEDRIVER_PATH))
 //        		.thread(10)
         		.run();
         	System.out.println(111);
@@ -131,8 +121,6 @@ public class Jd implements PageProcessor, Task  {
     public Site getSite() {
         if (null == site) {
             site = Site.me().setCharset("gbk")
-//            		.addCookie("username", cookies.get("username"))
-//            		.addCookie("password", cookies.get("password"))
             		.setSleepTime(100);
         }
 
@@ -141,13 +129,11 @@ public class Jd implements PageProcessor, Task  {
 
 	@Override
 	public String getUUID() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public int getTaskId() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 }

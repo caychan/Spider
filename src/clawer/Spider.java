@@ -80,6 +80,7 @@ public class Spider implements Runnable, Task {
     
     protected int taskId = 0;
 
+    //这里的scheduler保存初始的startReques和爬取过程中爬到的新url包装成的Request
     protected Scheduler scheduler = new QueueScheduler();
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
@@ -221,6 +222,7 @@ public class Spider implements Runnable, Task {
      */
     public Spider setScheduler(Scheduler scheduler) {
         checkIfRunning();
+        //如果自己定义了Scheduler，则把默认的Scheduler的Request导入新的里面
         Scheduler oldScheduler = this.scheduler;
         this.scheduler = scheduler;
         if (oldScheduler != null) {
@@ -232,17 +234,6 @@ public class Spider implements Runnable, Task {
         return this;
     }
 
-    /**
-     * add a pipeline for Spider
-     *
-     * @param pipeline
-     * @return this
-     * @see #addPipeline(pipeline.Pipeline)
-     * @deprecated
-     */
-    public Spider pipeline(Pipeline pipeline) {
-        return addPipeline(pipeline);
-    }
 
     /**
      * add a pipeline for Spider
@@ -266,7 +257,7 @@ public class Spider implements Runnable, Task {
      * @see Pipeline
      * @since 0.4.1
      */
-    public Spider setPipelines(List<Pipeline> pipelines) {
+    public Spider addPipelines(List<Pipeline> pipelines) {
         checkIfRunning();
         this.pipelines = pipelines;
         return this;
@@ -280,18 +271,6 @@ public class Spider implements Runnable, Task {
     public Spider clearPipeline() {
         pipelines = new ArrayList<Pipeline>();
         return this;
-    }
-
-    /**
-     * set the downloader of spider
-     *
-     * @param downloader
-     * @return this
-     * @see #setDownloader(downloader.Downloader)
-     * @deprecated
-     */
-    public Spider downloader(Downloader downloader) {
-        return setDownloader(downloader);
     }
 
     /**
@@ -342,8 +321,7 @@ public class Spider implements Runnable, Task {
                 if (threadPool.getThreadAlive() == 0 && exitWhenComplete) {
                     break;
                 }
-                // wait until new url added
-                waitNewUrl();
+                waitNewUrl();  // wait until new url added
             } else {
                 final Request requestFinal = request;
                 threadPool.execute(new Runnable() {
@@ -357,8 +335,8 @@ public class Spider implements Runnable, Task {
                             logger.error("process request " + requestFinal + " error", e);
                         } finally {
                             if (site.getHttpProxyPool()!=null && site.getHttpProxyPool().isEnable()) {
-                                site.returnHttpProxyToPool((HttpHost) requestFinal.getExtra(Request.PROXY), (Integer) requestFinal
-                                        .getExtra(Request.STATUS_CODE));
+                                site.returnHttpProxyToPool( (HttpHost) requestFinal.getExtra(Request.PROXY),
+                                							(Integer) requestFinal.getExtra(Request.STATUS_CODE));
                             }
                             pageCount.incrementAndGet();
                             signalNewUrl();

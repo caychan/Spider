@@ -2,6 +2,7 @@ package inaction;
 
 import java.util.List;
 
+import pipeline.ConsolePipeline;
 import pipeline.FilePipeline_nen;
 import processor.PageProcessor;
 import clawer.Page;
@@ -10,10 +11,13 @@ import clawer.Spider;
 
 public class Nen implements PageProcessor {
 
+	private static String filePath = "F:\\Clawer\\nen\\";
     private Site site;
-     
+    
     @Override
     public void process(Page page) {
+    	
+    	System.out.println(page.getHtml());
     	
     	if(page.getUrl().regex("http://\\w+\\.nen\\.com\\.cn/system/[\\d/_]+\\.shtml").match()){
 	    	String title = "";
@@ -21,19 +25,19 @@ public class Nen implements PageProcessor {
 	    	if (title == null) {			
 	    		title = page.getHtml().xpath("//*[@class='contentt']/text()").toString();
 			}
-			if (title == null) {			
+			if (title == null) {
 				title = page.getHtml().xpath("/html/body/div/div[4]/div[3]/div[1]/h2/text()").toString();
 			}
 			if (title == null) {
 				title = page.getHtml().xpath("//*[@id='w716']/h1/text()").toString();
 			}
-			if (title == null) {			
+			if (title == null) {
 				title = page.getHtml().xpath("/html/body/div[2]/div[8]/div[1]/div[1]/h2/text()").toString();
 			}
-			if (title == null) {						
+			if (title == null) {
 				title = page.getHtml().xpath("//*[@id='main']/div[2]/div[1]/div[2]/h1/text()").toString();
 			}
-			if (title == null) {						
+			if (title == null) {
 				title = page.getHtml().xpath("/html/body/div[3]/div[1]/h1/text()").toString();
 			}
 			if (title != null && title.length() < 5) {
@@ -48,10 +52,10 @@ public class Nen implements PageProcessor {
 	    	if (source == null) {
 				source = page.getHtml().xpath("//*[@id='source_baidu']/allText()").toString();
 			}
-	    	if (source == null) {			
+	    	if (source == null) {
 	    		source = page.getHtml().xpath("/html/body/div[7]/div[1]/h2/a[2]/text()").toString();
 	    	}
-	    	if (source == null) {			
+	    	if (source == null) {
 	    		source = page.getHtml().xpath("//*[@id='main']/div[2]/div[1]/div[2]/p[1]/span[3]/text()").toString();
 	    	}
 	    	if (source == null) {			
@@ -119,23 +123,29 @@ public class Nen implements PageProcessor {
 	    	link = page.getHtml().links().regex("(http://(?!dbsh|video|bbs|englishchannel).*\\.nen\\.com\\.cn.*)").all();
 	    	page.addTargetRequests(link);
 	    	
+	    	//skip决定pipeline要不要处理这个page
 	    	page.setSkip(true);
+	    	
     	}
     }
 
     public static void main(String[] args) {
         	String url = "http://www.nen.com.cn/";
-        	String url1 = "http://edu.nen.com.cn/system/2015/06/16/017773793.shtml";
-        	String url2 = "http://house.nen.com.cn/fangchan/web/html/100309/2015620/1434765836861.shtml";
-        	String url3 = "http://it.nen.com.cn/247941/101546037511b.shtml";
+//        	String url = "http://www.nowcoder.com/activity/campus2016";
+//        	String url1 = "http://edu.nen.com.cn/system/2015/06/16/017773793.shtml";
+//        	String url2 = "http://house.nen.com.cn/fangchan/web/html/100309/2015620/1434765836861.shtml";
+//        	String url3 = "http://it.nen.com.cn/247941/101546037511b.shtml";
+//        	
+//        	String url4 = "http://in.nen.com.cn/system/2015/06/19/017798420.shtml";
+//        	String url5 = "http://finance.nen.com.cn/system/2015/06/19/017796859.shtml";
+//        	String url6 = "http://in.nen.com.cn/system/2015/06/19/017796552.shtml";
+//        	String url7 = "http://dbsh.nen.com.cn";
         	
-        	String url4 = "http://in.nen.com.cn/system/2015/06/19/017798420.shtml";
-        	String url5 = "http://finance.nen.com.cn/system/2015/06/19/017796859.shtml";
-        	String url6 = "http://in.nen.com.cn/system/2015/06/19/017796552.shtml";
-        	String url7 = "http://dbsh.nen.com.cn";
+        	
 
         	Spider spider = new Spider(new Nen());
-        	spider
+
+			spider
         		.addUrl(url)
 //        		.addUrl(url1)
 //        		.addUrl(url2)
@@ -144,9 +154,9 @@ public class Nen implements PageProcessor {
 //        		.addUrl(url5)
 //        		.addUrl(url6)
 //        		.addUrl(url7)
-//        		.addPipeline(new ConsolePipeline())
-        		.addPipeline(new FilePipeline_nen("F:\\Clawer\\nen\\"))
-        		.thread(50)
+        		.addPipeline(new ConsolePipeline())
+        		.addPipeline(new FilePipeline_nen(filePath))
+        		.thread(10)
         		.run();
     }
     

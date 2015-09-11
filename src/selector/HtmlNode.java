@@ -7,16 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-/**
- * @author code4crafer@gmail.com
- */
 public class HtmlNode extends AbstractSelectable {
 
     private final List<Element> elements;
 
     public HtmlNode(List<Element> elements) {
-//    	System.out.println("HtmlNode 有参数");
-    	System.out.println(elements.get(0));
         this.elements = elements;
     }
 
