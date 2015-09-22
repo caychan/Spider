@@ -10,6 +10,8 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,6 +19,7 @@ import javax.sound.midi.Soundbank;
 import javax.swing.border.TitledBorder;
 
 import org.apache.http.annotation.ThreadSafe;
+import org.eclipse.jdt.internal.compiler.flow.FinallyFlowContext;
 import org.jboss.netty.handler.queue.BufferedWriteHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,42 +64,34 @@ public class FilePipeline_LNU_BBS extends FilePersistentBase implements Pipeline
     public void process(ResultItems resultItems, Task task) {
     	String url = resultItems.getRequest().getUrl();
     	String module = resultItems.get("module");
-    	String user = resultItems.get("user");
-    	String date = resultItems.get("date");
     	String title = resultItems.get("title");
-    	String click = resultItems.get("click");
-    	String reply = resultItems.get("reply");
-    	String content = resultItems.get("content");
-
     	
-    	//文件名为发帖人+标题格式
-    	String fileName = user + "-" + title;
-    	
+//    	得到url中的数字
+    	String fileNum = "";
+    	Matcher matcher = Pattern.compile("\\d+").matcher(url);
+    	if (matcher.find()) {
+			fileNum = matcher.group();
+		}
+//		去掉标题中的特殊符号    	
+    	title = title.replaceAll("[<>|\"*?:/]", "");
+//    	文件名为url中数字+标题格式
+    	String fileName = fileNum + "-" + title;
+    	PrintWriter	printWriter = null;
 	        try {
 	            String path = this.path + PATH_SEPERATOR + module + PATH_SEPERATOR + fileName +".txt";
-	            PrintWriter printWriter;
-	            
-	            File file = new File(path);
-	            //如果文件已经存在，则说明这是该帖子的非第一页，只存内容即可
-	            if (file.exists()) {
-	            	printWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(
-	            			file, true),"utf-8"));
-		            printWriter.println(content);
-	            }else {
-	            	printWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(
+
+	            printWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(
 	            			getFile(path), true),"utf-8"));
-	            	printWriter.println("url： " + url);
-	            	printWriter.println("标题： " + title);
-					printWriter.println("发帖人：  " + user);
-	            	printWriter.println("发帖时间：  " + date);
-	            	printWriter.println("查看人数  " + click);
-	            	printWriter.println("回复人数：  " + reply);
-		            printWriter.println("正文：\r\n" + content);
+	            printWriter.println("url：" + url);
+	            for(Entry<String, Object> result : resultItems.getAll().entrySet()){
+	            	printWriter.println(result.getKey() + "：" + result.getValue());
 	            }
 
-	            printWriter.close();
 	        } catch (IOException e) {
 	            logger.warn("write file error", e);
+	        } finally{
+	        	printWriter.flush();
+	        	printWriter.close();
 	        }
         
     }

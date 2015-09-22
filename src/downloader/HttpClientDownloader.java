@@ -8,16 +8,20 @@ import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.annotation.ThreadSafe;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -26,12 +30,14 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import selector.Html;
 import selector.PlainText;
 import utils.HttpConstant;
 import utils.UrlUtils;
 import clawer.Page;
 import clawer.Request;
 import clawer.Site;
+import clawer.Spider;
 import clawer.Task;
 
 import com.google.common.collect.Sets;
@@ -53,8 +59,9 @@ public class HttpClientDownloader extends AbstractDownloader {
         if (site == null) {
             return httpClientGenerator.getClient(null);
         }
-        String domain = site.getDomain();
+        String domain = site.getDomain();        
         CloseableHttpClient httpClient = httpClients.get(domain);
+        
         if (httpClient == null) {
             synchronized (this) {
                 httpClient = httpClients.get(domain);
@@ -66,7 +73,7 @@ public class HttpClientDownloader extends AbstractDownloader {
         }
         return httpClient;
     }
-
+    
     @Override
     public Page download(Request request, Task task) {
         Site site = null;
@@ -88,8 +95,28 @@ public class HttpClientDownloader extends AbstractDownloader {
         int statusCode=0;
         try {
             HttpUriRequest httpUriRequest = getHttpUriRequest(request, site, headers);
-            httpResponse = getHttpClient(site).execute(httpUriRequest);
+            CloseableHttpClient httpClient = getHttpClient(site);
+            httpResponse = httpClient.execute(httpUriRequest); 
+            
+/*            if (httpResponse.getEntity().getContentLength() < 1) {
+            	System.out.println("---");
+  
+            	httpClient = httpClientGenerator.generateSimpleClient(site);
+            	httpResponse = httpClient.execute(httpUriRequest);
+                httpClients.put(site.getDomain(), httpClient);
+            	HttpClientBuilder hcb = HttpClientBuilder.create();
+            	CloseableHttpClient hc = hcb.build();
+            	System.out.println("custom httpClient is "+hc);
+            	HttpGet httpget = new HttpGet(request.getUrl());
+            	try {
+            		httpResponse = httpClient.execute(httpget);
+				} catch (Exception e) {
+					httpget.abort();
+				}
+			}*/
+            
             statusCode = httpResponse.getStatusLine().getStatusCode();
+
             request.putExtra(Request.STATUS_CODE, statusCode);
             if (statusAccept(acceptStatCode, statusCode)) {
                 Page page = handleResponse(request, charset, httpResponse, task);
@@ -141,7 +168,7 @@ public class HttpClientDownloader extends AbstractDownloader {
                 .setConnectTimeout(site.getTimeOut())
                 .setCookieSpec(CookieSpecs.BEST_MATCH);
         if (site.getHttpProxyPool() != null && site.getHttpProxyPool().isEnable()) {
-            HttpHost host = site.getHttpProxyFromPool();
+			HttpHost host = site.getHttpProxyFromPool();
 			requestConfigBuilder.setProxy(host);
 			request.putExtra(Request.PROXY, host);
 		}

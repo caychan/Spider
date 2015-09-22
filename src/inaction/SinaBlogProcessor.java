@@ -4,7 +4,7 @@ import processor.PageProcessor;
 import clawer.Page;
 import clawer.Site;
 import clawer.Spider;
-import downloader.HttpClientDownloader_old;
+import downloader.HttpClientDownloader;
 
 
 public class SinaBlogProcessor implements PageProcessor {
@@ -18,9 +18,9 @@ public class SinaBlogProcessor implements PageProcessor {
             .me()
         //  .setDomain("blog.sina.com.cn")
             .setRetryTimes(3)
-            .setSleepTime(30);
-       //     .setUserAgent(
-         //           "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31");
+            .setSleepTime(30)
+            .setUserAgent(
+                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.65 Safari/537.31");
 
     @Override
     public void process(Page page) {

@@ -23,18 +23,19 @@ public class Test {
 		HttpClientBuilder hcb = HttpClientBuilder.create();
 		CloseableHttpClient httpClient = hcb.build();
 
-		String url = "http://www.lnubbs.com/forum.php?ForumID=20";
+		String url = "http://bbs.lnu.edu.cn/forum.php?mod=viewthread&tid=3161&extra=page%3D1";
 		HttpUriRequest httpUriRequest = RequestBuilder.get().setUri(url).build();
 		CloseableHttpResponse response = httpClient.execute(httpUriRequest);
-		
 		
 //		HttpGet httpget = new HttpGet(url);
 //		CloseableHttpResponse response = httpClient.execute(httpget);
 		
+		
+		
+		
 		HttpEntity entity = response.getEntity();
-
 		byte[] cont = IOUtils.toByteArray(entity.getContent());
-		System.out.println(new String(cont, "gb2312"));
+		System.out.println(new String(cont, "utf-8"));
 		
 	}
 

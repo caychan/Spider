@@ -1,27 +1,26 @@
 package inaction;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import pipeline.ConsolePipeline;
 import pipeline.FilePipeline_LNU_BBS;
 import processor.PageProcessor;
-import utils.UrlUtils;
-import utils.UtilsConstants;
 import clawer.Page;
 import clawer.Site;
 import clawer.Spider;
-import downloader.HttpClientDownloader;
-import downloader.HttpClientDownloader_old;
-import downloader.SeleniumDownloader;
 
 public class LNU_BBS implements PageProcessor {
 
 	private static String filePath = "F:\\Clawer\\LNU_BBS\\";
     private Site site;
     
+    public List<String> urlList = new ArrayList<String>();
+    
     @Override
     public void process(Page page) {
-    	System.out.println(page.getHtml());
+    	
+    	//把正在处理的url加入到List中
+    	addInfoToList(page.getUrl().toString());
     	
     	if(page.getUrl().regex("http://www\\.lnubbs\\.com/thread\\.php.*").match()){
     		//bbs版块
@@ -73,27 +72,37 @@ public class LNU_BBS implements PageProcessor {
 
 	public static void main(String[] args) {
 		String url = "http://www.lnubbs.com/forum.php?ForumID=20";
-//		String url1 = "http://www.lnubbs.com/thread.php?ThreadID=4370";
-		// String url = "http://www.nowcoder.com/activity/campus2016";
-
+		
 		Spider spider = new Spider(new LNU_BBS());
 		spider
-//			.addUrl(url1)
 			.addUrl(url)
-			.setDownloader(new HttpClientDownloader())
-//			.addPipeline(new ConsolePipeline())
-		//  .setDownloader(new SeleniumDownloader(UtilsConstants.CHROMEDRIVER_PATH))
 			.addPipeline(new FilePipeline_LNU_BBS(filePath))
-			.thread(2)
+			.thread(16)
 			.run();
 	}
     
     @Override
     public Site getSite() {
         if (null == site) {
-            site = Site.me().setRetryTimes(3);
+            site = Site.me()
+            		.setRetryTimes(3)
+            		.setSleepTime(100);
         }
 
         return site;
     }
+    
+    
+	private void addInfoToList(String url){
+		synchronized (urlList) {
+			urlList.add(url);
+		}
+	}
+	
+	private void clearList(){
+		synchronized (urlList) {
+			urlList.clear();
+		}
+	}
+	
 }

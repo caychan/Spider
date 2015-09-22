@@ -102,9 +102,7 @@ public class FileCacheQueueScheduler extends DuplicateRemovedScheduler implement
             urls = new LinkedHashSet<String>();
             readCursorFile();
             readUrlFile();
-            
-            System.out.println("urls' number is "+urls.size());
-            System.out.println("queue' number is "+queue.size());
+
         } catch (FileNotFoundException e) {
             //init
             logger.error("init cache file " + getFileName(fileUrlAllName));
@@ -148,7 +146,6 @@ public class FileCacheQueueScheduler extends DuplicateRemovedScheduler implement
                 cursor = new AtomicInteger(NumberUtils.toInt(line));
             }
 
-            System.out.println(cursor.get());
         } finally {
             if (fileCursorReader != null) {
                 IOUtils.closeQuietly(fileCursorReader);

@@ -13,9 +13,25 @@ import clawer.Spider;
 
 public class LNU_TIEBA implements PageProcessor {
 
-	private static String filePath = "F:\\Clawer\\LNU_TIEBA\\";
+	private static String filePath = "F:\\Clawer\\LNU_TIEBA_test\\";
 //	private static String fileCacheQueueSchedulerPath = "F:\\Clawer\\LNU_TIEBA_Scheduler\\";
     private Site site;
+    
+	static Spider spider = new Spider(new LNU_TIEBA());
+	List<String> urlList = new ArrayList<String>();
+    
+	
+	
+	//停止爬虫
+    public void stopSpider(){
+    	spider.stop();
+    }
+    //得到爬过但还没显示在前端的url list，并清空list以供后续使用
+    public List<String> getProcessedUrl() {
+    	List<String> lst = getUrlList();
+    	clearUrlList(urlList);
+    	return lst;
+    }
     
     @Override
     public void process(Page page) {
@@ -123,21 +139,32 @@ public class LNU_TIEBA implements PageProcessor {
 
 	public static void main(String[] args) {
 		String url = "http://tieba.baidu.com/f?ie=utf-8&kw=%E8%BE%BD%E5%AE%81%E5%A4%A7%E5%AD%A6&fr=search";
-		String url1 = "http://tieba.baidu.com/p/4011131260";
+//		String url1 = "http://tieba.baidu.com/p/4011131260";
 		
-		Spider spider = new Spider(new LNU_TIEBA());
 		spider
-		.addUrl(url1)
+//		.addUrl(url1)
 			.addUrl(url)
+			//记录已经爬过的url，方便重启后继续爬上一次爬到的
 			.setScheduler(new FileCacheQueueScheduler(filePath))
 //			.addUrl(url1)
 //			.addPipeline(new ConsolePipeline())
 		//  .setDownloader(new SeleniumDownloader(UtilsConstants.CHROMEDRIVER_PATH))
 			.addPipeline(new FilePipeline_LNU_TIEBA(filePath))
-			.thread(32)
+			
+			
+			//设置线程数
+//			.thread(4)
 			.run();
 	}
     
+    private List<String> getUrlList() {
+		return urlList;
+	}
+    
+    private void clearUrlList(List<String> urlList){
+    	urlList.clear();
+    }
+	
     @Override
     public Site getSite() {
         if (null == site) {
