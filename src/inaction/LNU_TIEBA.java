@@ -3,13 +3,14 @@ package inaction;
 import java.util.ArrayList;
 import java.util.List;
 
-import pipeline.ConsolePipeline;
 import pipeline.FilePipeline_LNU_TIEBA;
 import processor.PageProcessor;
 import scheduler.FileCacheQueueScheduler;
+import utils.UtilsConstants;
 import clawer.Page;
 import clawer.Site;
 import clawer.Spider;
+import downloader.SeleniumDownloader;
 
 public class LNU_TIEBA implements PageProcessor {
 
@@ -70,7 +71,10 @@ public class LNU_TIEBA implements PageProcessor {
     			page.putField("reply", reply);
     			
     			//内容
-    			String content = page.getHtml().toString();
+    			String content = page.getHtml().xpath("//*[@id='container']/tidyText()").toString();
+    			if (content != null) {
+					content = removeTags(content);
+				}
     			page.putField("content", content);
     			
     			List<String> link = null;
@@ -101,6 +105,9 @@ public class LNU_TIEBA implements PageProcessor {
 		    	
 		    	//内容
 		    	String content = page.getHtml().toString();
+    			if (content != null) {
+					content = removeTags(content);
+				}
 		    	page.putField("正文", content);
 	
 		    	List<String> link = null;
@@ -139,21 +146,19 @@ public class LNU_TIEBA implements PageProcessor {
 
 	public static void main(String[] args) {
 		String url = "http://tieba.baidu.com/f?ie=utf-8&kw=%E8%BE%BD%E5%AE%81%E5%A4%A7%E5%AD%A6&fr=search";
-//		String url1 = "http://tieba.baidu.com/p/4011131260";
+		String url1 = "http://tieba.baidu.com/p/4054469221";
 		
 		spider
-//		.addUrl(url1)
+		.addUrl(url1)
 			.addUrl(url)
 			//记录已经爬过的url，方便重启后继续爬上一次爬到的
 			.setScheduler(new FileCacheQueueScheduler(filePath))
 //			.addUrl(url1)
 //			.addPipeline(new ConsolePipeline())
-		//  .setDownloader(new SeleniumDownloader(UtilsConstants.CHROMEDRIVER_PATH))
+//		    .setDownloader(new SeleniumDownloader(UtilsConstants.CHROMEDRIVER_PATH))
 			.addPipeline(new FilePipeline_LNU_TIEBA(filePath))
-			
-			
 			//设置线程数
-//			.thread(4)
+			.thread(32)
 			.run();
 	}
     
@@ -173,4 +178,13 @@ public class LNU_TIEBA implements PageProcessor {
 
         return site;
     }
+    
+	
+    private String removeTags(String content){
+    	String regEx_html = "<[^>]+>";
+    	content = content.replaceAll(regEx_html, "");
+    	
+    	return content;
+    }
+	
 }

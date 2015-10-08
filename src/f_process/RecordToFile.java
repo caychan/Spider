@@ -1,4 +1,4 @@
-package f_pipeline;
+package f_process;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,7 +8,9 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-public class FileWordPipeline implements Pipeline {
+import f_pipeline.Pipeline;
+
+public class RecordToFile implements Pipeline {
 
 	public String path;
 
@@ -21,7 +23,7 @@ public class FileWordPipeline implements Pipeline {
 		}
 	}
 
-	public FileWordPipeline(String path) {
+	public RecordToFile(String path) {
 		setPath(path);
 	}
 
@@ -30,7 +32,7 @@ public class FileWordPipeline implements Pipeline {
 		
 	}
 	
-	public void process(String path, File file, List<String> list) {
+	public void process(File file, List<String> list) {
 		
 		PrintWriter printWriter = null;
 		 try {
@@ -65,10 +67,6 @@ public class FileWordPipeline implements Pipeline {
 
 	private void setPath(String path) {
 		this.path = path;
-	}
-
-	private String getPath() {
-		return path;
 	}
 
 }

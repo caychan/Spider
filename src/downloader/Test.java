@@ -14,12 +14,16 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 
+import sun.print.resources.serviceui;
+
 import com.sun.xml.internal.ws.Closeable;
+
+import f_process.Search;
 
 public class Test {
 
-	public static void main(String[] args) throws ClientProtocolException, IOException {
-		
+	public static void main(String[] args) throws ClientProtocolException, IOException, InterruptedException {
+/*		
 		HttpClientBuilder hcb = HttpClientBuilder.create();
 		CloseableHttpClient httpClient = hcb.build();
 
@@ -35,8 +39,67 @@ public class Test {
 		
 		HttpEntity entity = response.getEntity();
 		byte[] cont = IOUtils.toByteArray(entity.getContent());
-		System.out.println(new String(cont, "utf-8"));
 		
+		System.out.println(new String(cont, "utf-8"));*/
+
+//		System.out.println(test());
+		
+		final Search search = new Search();
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					search.M();
+					Thread.sleep(13000);
+					System.out.println("====");
+					search.stopSearch();
+					Thread.sleep(5000);
+					search.M();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		Thread thread2 = new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(3000);
+					System.out.println("-----");
+					search.stopSearch();
+					
+					Thread.sleep(5000);
+					System.out.println("-----");
+					search.M();
+					
+					
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		});
+		thread.start();
+		thread2.start();
+		
+
 	}
+	
+	
+	static int test(){
+		int i = 1;
+		try{
+			i = 2;
+			return i++;
+		}catch(Exception e){
+			return 3;
+		} finally{
+			i ++;
+//			return i;
+		}
+	}
+	
 
 }

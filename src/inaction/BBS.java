@@ -5,6 +5,7 @@ import java.util.List;
 
 import pipeline.FilePipeline_LNU_BBS;
 import processor.PageProcessor;
+import scheduler.FileCacheQueueScheduler;
 import clawer.Page;
 import clawer.Site;
 import clawer.Spider;
@@ -12,7 +13,7 @@ import clawer.Spider;
 public class BBS implements PageProcessor {
 
 	//保存爬到的网页信息路径，若要保存，必赋值
-	private static String filePath = "F:\\Clawer\\LNU_BBS_NEED_test\\";
+	private static String filePath = "F:\\Clawer\\LNU_BBS_nsfew\\";
     private Site site;
     
     int i = 0;
@@ -29,11 +30,11 @@ public class BBS implements PageProcessor {
     public List<String> getProcessedUrl() {
     	List<String> urlListL = getUrlList();
     	clearUrlList(urlList);
-    	System.out.println("测试一下");
-    	System.out.println(urlListL);
+
     	return urlListL;
     }
-	
+
+    
     @Override
     public void process(Page page) {
 
@@ -78,7 +79,10 @@ public class BBS implements PageProcessor {
 	    	page.putField("reply", reply);
 	    	
 	    	//内容
-	    	String content = page.getHtml().xpath("//body/tidyText()").toString();
+	    	String content = page.getHtml().xpath("//*[@id='postlist']/tidyText()").toString();
+	    	if (content != null) {
+				content = removeTags(content);
+			}
 	    	page.putField("content", content);
 
     	} else if(page.getUrl().regex("http://bbs\\.lnu\\.edu\\.cn/forum\\.php\\?mod=forumdisplay.*").match()){
@@ -127,7 +131,8 @@ public class BBS implements PageProcessor {
 //			.addUrl(url)
 			.addUrl(url0,url1,url2,url3,url4,url5,url6,url7,url8,url9,url10,url11,url12,url13,url14,url15,url16,url17,url18,url19)
 			.addPipeline(new FilePipeline_LNU_BBS(filePath))
-//			.thread(4)
+			.setScheduler(new FileCacheQueueScheduler(filePath))
+//			.thread(32)
 			.run();
 	}
 
@@ -150,5 +155,13 @@ public class BBS implements PageProcessor {
         }
 
         return site;
+    }
+    
+	
+    private String removeTags(String content){
+    	String regEx_html = "<[^>]+>";
+    	content = content.replaceAll(regEx_html, "");
+    	
+    	return content;
     }
 }

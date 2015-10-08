@@ -1,4 +1,4 @@
-package scheduler;
+package f_scheduler;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -7,8 +7,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -18,26 +16,22 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import clawer.Request;
-import clawer.Task;
-import f_scheduler.BloomFiltereRemover;
 
 /**
  * Store urls and cursor in files so that a Spider can resume the status when shutdown.<br>
- *
- * @author code4crafter@gmail.com <br>
- * @since 0.2.0
  */
-public class FileCacheQueueScheduler extends DuplicateRemovedScheduler implements MonitorableScheduler {
+public class FileCacheScheduler implements Scheduler{
+	
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
     private String filePath = System.getProperty("java.io.tmpdir");
 
-    private String fileUrlAllName = ".urls.txt";
+    private String fileUrlAllName = ".search_path.txt";
 
-    private Task task;
-
-    private String fileCursor = ".cursor.txt";
+    private String fileCursor = ".search_cursor.txt";
 
     private PrintWriter fileUrlWriter;
 
@@ -47,57 +41,44 @@ public class FileCacheQueueScheduler extends DuplicateRemovedScheduler implement
 
     private AtomicBoolean inited = new AtomicBoolean(false);
 
-    private BlockingQueue<Request> queue = new LinkedBlockingQueue<Request>();
-    
-//    private Set<String> urls = new LinkedHashSet<String>();;
+    private BlockingQueue<File> queue = new LinkedBlockingQueue<File>();
+
     //参数是待检测的个数，自定义
-    private BloomFiltereRemover bfRemover;	
+    private BloomFiltereRemover bfRemover = new BloomFiltereRemover(1000000);	
 
-    public FileCacheQueueScheduler(String filePath) {
+
+    public FileCacheScheduler(String filePath) {
         if (!filePath.endsWith("/") && !filePath.endsWith("\\")) {
-            filePath += "/";
+            filePath += "\\";
         }
         this.filePath = filePath;
-        bfRemover = new BloomFiltereRemover(500000);
-    }
-    /**
-     * 
-     * @param filePath 保存已爬过uro的路径
-     * @param size 一共大约要爬多少数据（小于21亿）
-     */
-    public FileCacheQueueScheduler(String filePath, int size) {
-        if (!filePath.endsWith("/") && !filePath.endsWith("\\")) {
-            filePath += "/";
-        }
-        this.filePath = filePath;
-        bfRemover = new BloomFiltereRemover(size);
     }
 
-    @Override
-    public synchronized Request poll(Task task) {
-        if (!inited.get()) {
-            init(task);
-        }
-        fileCursorWriter.println(cursor.incrementAndGet());
-        return queue.poll();
-    }
-    
-    @Override
-    protected void pushWhenNoDuplicate(Request request, Task task) {
-        if (!inited.get()) {
-            init(task);
-        }
-        queue.add(request);
-        fileUrlWriter.println(request.getUrl());
-    }
-    
     private void flush() {
         fileUrlWriter.flush();
         fileCursorWriter.flush();
     }
+    
+    //LinkedBlockingQueue内部实现了ReentrantLock
+    public void push(File file) {
+        if (!inited.get()) {
+            init();
+        }
+        if (! bfRemover.isDuplicate(file)) {
+        	queue.add(file);
+        	fileUrlWriter.println(file.getAbsolutePath());
+		}
+    }
 
-    private void init(Task task) {
-        this.task = task;
+    public File poll() {
+        if (!inited.get()) {
+            init();
+        }
+        fileCursorWriter.println(cursor.incrementAndGet());
+        return queue.poll();
+    }
+
+    private void init() {
         File file = new File(filePath);
         if (!file.exists()) {
             file.mkdirs();
@@ -110,12 +91,13 @@ public class FileCacheQueueScheduler extends DuplicateRemovedScheduler implement
     }
 
     private void initFlushThread() {
+    	//每隔十秒执行一次
         Executors.newScheduledThreadPool(1).scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
                 flush();
             }
-        }, 10, 10, TimeUnit.SECONDS);
+        }, 5, 5, TimeUnit.SECONDS);
     }
 
     private void initWriter() {
@@ -134,6 +116,7 @@ public class FileCacheQueueScheduler extends DuplicateRemovedScheduler implement
         try {
             readCursorFile();
             readUrlFile();
+
         } catch (FileNotFoundException e) {
             //init
             logger.error("init cache file " + getFileName(fileUrlAllName));
@@ -148,14 +131,14 @@ public class FileCacheQueueScheduler extends DuplicateRemovedScheduler implement
         try {
             fileUrlReader = new BufferedReader(new FileReader(getFileName(fileUrlAllName)));
             int lineReaded = 0;
+            int i = cursor.get();
             while ((line = fileUrlReader.readLine()) != null) {
-                //把所有url，包括爬过的和保存下来但是还没爬的，都放进urls里面
+                //把所有url，包括爬过的和保存下来但是还没爬的，都放进bfRemover里面
             	bfRemover.put(line);
                 lineReaded++;
                 //当读到已经爬过的数目的时候，也就是说接下来要读的是没有爬过的，放进queue里。
-                int i = cursor.get();
                 if (lineReaded > i) {
-                    queue.add(new Request(line));
+                    queue.add(new File(line));
                 }
             }
 
@@ -172,10 +155,10 @@ public class FileCacheQueueScheduler extends DuplicateRemovedScheduler implement
         	fileCursorReader = new BufferedReader(new FileReader(getFileName(fileCursor)));
             String line;
             //read the last number，也就是已经爬了多少条
+            
             while ((line = fileCursorReader.readLine()) != null) {
                 cursor = new AtomicInteger(NumberUtils.toInt(line));
             }
-
         } finally {
             if (fileCursorReader != null) {
                 IOUtils.closeQuietly(fileCursorReader);
@@ -184,17 +167,16 @@ public class FileCacheQueueScheduler extends DuplicateRemovedScheduler implement
     }
 
     private String getFileName(String filename) {
-        return filePath + task.getUUID() + filename;
+        return filePath + filename;
     }
 
-
-    @Override
-    public int getLeftRequestsCount(Task task) {
-        return queue.size();
+    public void clear(){
+    	queue.clear();
     }
 
-    @Override
-    public int getTotalRequestsCount(Task task) {
-        return getDuplicateRemover().getTotalRequestsCount(task);
-    }
+	@Override
+	public int getLeftRequestsCount() {
+		return queue.size();
+	}
+
 }

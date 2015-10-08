@@ -2,6 +2,7 @@ package f_thread;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -20,6 +21,8 @@ public class CountableThreadPool {
 
     private AtomicInteger threadAlive = new AtomicInteger();
 
+    private ExecutorService executorService;
+
     private ReentrantLock reentrantLock = new ReentrantLock();
 
     private Condition condition = reentrantLock.newCondition();
@@ -32,6 +35,7 @@ public class CountableThreadPool {
     public CountableThreadPool(int threadNum, ExecutorService executorService) {
         this.threadNum = threadNum;
         this.executorService = executorService;
+        this.executorService = Executors.newFixedThreadPool(threadNum);
     }
 
     public void setExecutorService(ExecutorService executorService) {
@@ -46,10 +50,9 @@ public class CountableThreadPool {
         return threadNum;
     }
 
-    private ExecutorService executorService;
 
     public void execute(final Runnable runnable) {
-
+    	//双重验证
         if (threadAlive.get() >= threadNum) {
             try {
                 reentrantLock.lock();
@@ -86,9 +89,27 @@ public class CountableThreadPool {
         return executorService.isShutdown();
     }
 
-    public void shutdown() {
-        executorService.shutdown();
-    }
+    
+    /**
+     * 关闭线程池，
+     * @return 成功关闭，返回true，否则返回false
+     */
+    public boolean shutdown() {
+    	executorService.shutdown();
+		try {
+			if (executorService.awaitTermination(3, TimeUnit.SECONDS)) {
+				return true;
+			} else {
+				executorService.shutdownNow();
+				if (executorService.awaitTermination(10, TimeUnit.SECONDS)) {
+					return true;
+				}
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 
 
 }

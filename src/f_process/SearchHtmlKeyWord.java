@@ -80,7 +80,7 @@ public class SearchHtmlKeyWord {
 			
 			//查找中英文的句号，感叹号，问号，分号，冒号，破折号和空白
 			//Pattern p = Pattern.compile("[。！？；：——.?:;!-\\s]");
-			Pattern p = Pattern.compile("[。！？；?\\s]");
+			Pattern p = Pattern.compile("[。！？；\\?\\s]");
 			Matcher m = p.matcher(subString);
 			//初始化一下lastPubctuation，因为可能有如果找不到会返回-1的情况，所以为了安全，初始值设为了-2
 			int lastPunctuation = -2;
@@ -119,14 +119,11 @@ public class SearchHtmlKeyWord {
 	}
 	
 	
-	
 	//去掉所有的html标签
-	private String removeTags(String content){
-		String regex = "<.*?>";
-		content = content.replaceAll(regex, "");
-//		把连续出现的两个以上的空白去掉
-		regex = "\\s{2,}";
-		content = content.replaceAll(regex, " ");
+	private String getContent(String content){
+		if (content.indexOf("content：") >= 0) {
+			content = content.substring(content.indexOf("content："));
+		}
 		
 		return content;
 	}
@@ -143,7 +140,7 @@ public class SearchHtmlKeyWord {
 	        } 
 	        
 	        str = sb.toString();
-	        str = removeTags(str);	
+	        str = getContent(str);	
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally{

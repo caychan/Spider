@@ -14,6 +14,7 @@ import pipeline.ConsolePipeline;
 import pipeline.FilePipeline;
 import pipeline.FilePipeline_jd;
 import processor.PageProcessor;
+import scheduler.FileCacheQueueScheduler;
 import utils.UtilsConstants;
 import clawer.Page;
 import clawer.Site;
@@ -137,19 +138,20 @@ public class Jingdong implements PageProcessor {
 //        		.addPipeline(new DBPipeline())
 //        		.addPipeline(new ConsolePipeline())
         		.addPipeline(new FilePipeline_jd("F:\\Clawer\\jd\\jingdong.csv"))
+        		.setScheduler(new FileCacheQueueScheduler("F:\\Clawer\\jd\\"))
 //        		.setDownloader(new HttpClientDownloader())
         		.setDownloader(new SeleniumDownloader_jd(UtilsConstants.CHROMEDRIVER_PATH))
-//        		.thread(10)
+//        		.thread(16)
         		.run();
     }
     
     @Override
     public Site getSite() {
         if (null == site) {
-            site = Site.me().setCharset("gbk").setRetryTimes(3)
+            site = Site.me().setCharset("gbk").setRetryTimes(3);
 //            		.addCookie("username", cookies.get("username"))
 //            		.addCookie("password", cookies.get("password"))
-            		.setSleepTime(100);
+//            		.setSleepTime(100);
         }
 
         return site;

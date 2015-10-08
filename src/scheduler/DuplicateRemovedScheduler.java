@@ -19,10 +19,10 @@ public abstract class DuplicateRemovedScheduler implements Scheduler {
 
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
-//    private DuplicateRemover duplicatedRemover = new HashSetDuplicateRemover();					//这个类里用set取出重复的url
+//    private DuplicateRemover duplicatedRemover = new HashSetDuplicateRemover();		//这个类里用set取出重复的url
     
-    //参数是待检测的个数
-    private BloomFilterDuplicateRemover duplicatedRemover = new BloomFilterDuplicateRemover(1700000);		
+    //参数是待检测的个数，自定义
+    private BloomFilterDuplicateRemover duplicatedRemover = new BloomFilterDuplicateRemover(10000000);		
 
     public DuplicateRemover getDuplicateRemover() {
         return duplicatedRemover;

@@ -4,45 +4,48 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import clawer.Spider;
+import sun.net.www.http.KeepAliveCache;
 import f_pipeline.ConsolePipeline;
-import f_pipeline.FileWordPipeline;
+import f_scheduler.FileCacheScheduler;
 import f_searcher.Searcher;
 
 public class Search implements Processor {
 
-	private static final String FILE_PATH = "F:\\Clawer\\LNU_TIEBA\\2006-05\\";
+	private static final String FILE_PATH = "F:\\Clawer\\LNU_BBS_test\\";
 	private String keyWord = "辽宁大学";
+	static Searcher searcher = new Searcher(new Search());
 	
-	static Searcher sch = new Searcher(new Search());
-	
-	FileWordPipeline fwPipeline = new FileWordPipeline("F:\\Clawer\\LNU_TIEBA\\record");
-	//记录查找结果
-	String recordPath = "F:\\Clawer\\LNU_TIEBA\\record";
+	RecordToFile fwPipeline = new RecordToFile("F:\\Clawer\\LNU_TBBS\\record");
 	
 //	保存处理的文件信息到list中，供前端使用
 	List<List<String>> lstFiles = new ArrayList<List<String>>();
 	
 	
-	public static void main(String[] args) {
+	int i = 0;
+	
+	
+//	public static void main(String[] args) {
+		public static void M() {
+		searcher.start();
 		File file = new File(FILE_PATH);
 		if (file.exists()) {
-			sch.startFile(file)
+			searcher.startFile(file)
+//			.setScheduler(new FileCacheScheduler(FILECACHEPATH))
 			//在console中显示当前处理的文件
 			.addPipeline(new ConsolePipeline())
 			//开启多线程同步处理
 			//.thread(5)
-			.setSleepTime(100)
+			.setSleepTime(500)
 			.run();
 		}
 	}
-	
+		
+
+
 	@Override
 	public void process(File file) {
-		
 		if (file.isDirectory()) {
-			ExtraFiles ef = new ExtraFiles();
-			ef.getExtraFiles(file);
+			searcher.getExtraFiles(file);
 		} else if (file.isFile() && file.canRead()) {
 			SearchHtmlKeyWord shkw = new SearchHtmlKeyWord();
 			List<String> sentence = new ArrayList<String>();
@@ -50,11 +53,11 @@ public class Search implements Processor {
 			if (sentence.size() > 1) {
 				System.out.println("------" + file.getAbsolutePath());
 //				addInfoToList(sentence);
-				for (String str : sentence) {
+/*				for (String str : sentence) {
 					System.out.println(str);
-				}
+				}*/
 				
-				fwPipeline.process(recordPath, file, sentence);
+//				fwPipeline.process(file, sentence);
 				
 			}
 		}
@@ -62,7 +65,7 @@ public class Search implements Processor {
 	
 	
 	public void stopSearch(){
-		sch.stop();
+		searcher.stop();
 	}
 
 	private void addInfoToList(List<String> sentence){
@@ -76,5 +79,6 @@ public class Search implements Processor {
 			lstFiles.clear();
 		}
 	}
+	
 	
 }

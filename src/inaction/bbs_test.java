@@ -3,15 +3,18 @@ package inaction;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sun.org.apache.xerces.internal.impl.xpath.XPath;
+
 import pipeline.FilePipeline_LNU_BBS;
 import processor.PageProcessor;
+import scheduler.FileCacheQueueScheduler;
 import clawer.Page;
 import clawer.Site;
 import clawer.Spider;
 
-public class LNU_BBS implements PageProcessor {
+public class bbs_test implements PageProcessor {
 
-	private static String filePath = "F:\\Clawer\\LNU_BBS\\";
+	private static String filePath = "F:\\Clawer\\BBS_tessd\\";
     private Site site;
     
     public List<String> urlList = new ArrayList<String>();
@@ -49,6 +52,9 @@ public class LNU_BBS implements PageProcessor {
 	    	
 	    	//内容
 	    	String content = page.getHtml().toString();
+	    	if (content != null) {
+				content = removeTags(content);
+			}
 	    	page.putField("content", content);
 
 	    	List<String> link = null;
@@ -72,10 +78,20 @@ public class LNU_BBS implements PageProcessor {
 
 	public static void main(String[] args) {
 		String url = "http://www.lnubbs.com/forum.php?ForumID=20";
+		String url1 = "http://www.lnubbs.com/forum.php?ForumID=20";
+		String url2 = "http://www.lnubbs.com/forum.php?ForumID=20";
+		String url3 = "http://www.lnubbs.com/forum.php?ForumID=20";
+		String url4 = "http://www.lnubbs.com/forum.php?ForumID=20";
+		String url5 = "http://www.lnubbs.com/forum.php?ForumID=20";
+		String url6 = "http://www.lnubbs.com/forum.php?ForumID=20";
+		String url7 = "http://www.lnubbs.com/forum.php?ForumID=20";
+		String url8 = "http://www.lnubbs.com/forum.php?ForumID=20";
+		String url9 = "http://www.lnubbs.com/forum.php?ForumID=20";
 		
-		Spider spider = new Spider(new LNU_BBS());
+		Spider spider = new Spider(new bbs_test());
 		spider
-			.addUrl(url)
+			.addUrl(url,url1,url2,url3,url4,url5,url6,url7,url8,url9)
+			.setScheduler(new FileCacheQueueScheduler(filePath))
 			.addPipeline(new FilePipeline_LNU_BBS(filePath))
 			.thread(16)
 			.run();
@@ -85,8 +101,8 @@ public class LNU_BBS implements PageProcessor {
     public Site getSite() {
         if (null == site) {
             site = Site.me()
-            		.setRetryTimes(3)
-            		.setSleepTime(100);
+            		.setRetryTimes(3);
+//            		.setSleepTime(100);
         }
 
         return site;
@@ -105,4 +121,10 @@ public class LNU_BBS implements PageProcessor {
 		}
 	}
 	
+    private String removeTags(String content){
+    	String regEx_html = "<[^>]+>";
+    	content = content.replaceAll(regEx_html, "");
+    	
+    	return content;
+    }
 }

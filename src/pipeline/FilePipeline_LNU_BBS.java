@@ -1,30 +1,17 @@
 package pipeline;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.sound.midi.Soundbank;
-import javax.swing.border.TitledBorder;
-
 import org.apache.http.annotation.ThreadSafe;
-import org.eclipse.jdt.internal.compiler.flow.FinallyFlowContext;
-import org.jboss.netty.handler.queue.BufferedWriteHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import selector.PlainText;
 import utils.FilePersistentBase;
 import clawer.Page;
 import clawer.ResultItems;
@@ -50,11 +37,6 @@ public class FilePipeline_LNU_BBS extends FilePersistentBase implements Pipeline
         setPath(path);
     }
 
-/*	@Override
-	public void process(ResultItems resultItems, Task task) {
-		
-	}*/
-
 	@Override
 	public void process(Task task, Page page) {
 		
@@ -66,6 +48,7 @@ public class FilePipeline_LNU_BBS extends FilePersistentBase implements Pipeline
     	String module = resultItems.get("module");
     	String title = resultItems.get("title");
     	
+    
 //    	得到url中的数字
     	String fileNum = "";
     	Matcher matcher = Pattern.compile("\\d+").matcher(url);
@@ -95,4 +78,6 @@ public class FilePipeline_LNU_BBS extends FilePersistentBase implements Pipeline
 	        }
         
     }
+
+
 }

@@ -2,7 +2,6 @@ package pipeline;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -56,7 +55,7 @@ public class FilePipeline_jd extends FilePersistentBase implements Pipeline {
         	
             PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file,true),"gbk"));
 //            printWriter.println("url:\t" + resultItems.getRequest().getUrl());
-            String value = "";
+            String value = resultItems.getRequest().getUrl() + ",";
             for (Map.Entry<String, Object> entry : resultItems.getAll().entrySet()) {
             	value += entry.getValue()+",";
 /*                if (entry.getValue() instanceof Iterable) {

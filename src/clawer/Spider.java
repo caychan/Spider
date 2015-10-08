@@ -57,12 +57,10 @@ import downloader.HttpClientDownloader;
  * "http://my.oschina.net/*blog/*")) <br>
  * .scheduler(new FileCacheQueueScheduler("/data/temp/webmagic/cache/")).run(); <br>
  *
- * @author code4crafter@gmail.com <br>
  * @see Downloader
  * @see Scheduler
  * @see PageProcessor
  * @see Pipeline
- * @since 0.1.0
  */
 public class Spider implements Runnable, Task {
 
@@ -117,21 +115,6 @@ public class Spider implements Runnable, Task {
 
     private int emptySleepTime = 30000;
     
-    
-/*    public Spider setTaskId(Integer taskId) {
-        this.taskId = taskId;
-        return this;
-    }
-    
-    @Override
-    public Integer getTaskId() {
-        if (taskId != null) {
-            return taskId;
-        }
-       	return  null;
-
-    } 
-    */
     
     public Spider setTaskId(Integer taskId) {
         this.taskId = taskId;
@@ -380,13 +363,16 @@ public class Spider implements Runnable, Task {
         }
     }
 
-    public void close() {
-        destroyEach(downloader);
-        destroyEach(pageProcessor);
-        for (Pipeline pipeline : pipelines) {
-            destroyEach(pipeline);
-        }
-        threadPool.shutdown();
+    public boolean close() {
+    	if ( threadPool.shutdown()) {
+    		destroyEach(downloader);
+    		destroyEach(pageProcessor);
+    		for (Pipeline pipeline : pipelines) {
+    			destroyEach(pipeline);
+    		}
+    		return true;
+		}
+    	return false;
     }
 
     private void destroyEach(Object object) {
@@ -399,19 +385,6 @@ public class Spider implements Runnable, Task {
         }
     }
 
-    /**
-     * Process specific urls without url discovering.
-     *
-     * @param urls urls to process
-     */
-    public void test(String... urls) {
-        initComponent();
-        if (urls.length > 0) {
-            for (String url : urls) {
-                processRequest(new Request(url));
-            }
-        }
-    }
 
     protected void processRequest(Request request) {
         Page page = downloader.download(request, this);
