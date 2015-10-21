@@ -9,8 +9,6 @@ import clawer.Task;
  * manage urls to fetch
  * remove duplicate urls
  *
- * @author code4crafter@gmail.com <br>
- * @since 0.1.0
  */
 public interface Scheduler {
 

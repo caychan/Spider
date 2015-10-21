@@ -9,9 +9,6 @@ import java.util.List;
 /**
  * Borrowed from https://code.google.com/p/cx-extractor/
  *
- * @author code4crafter@gmail.com <br>
- * @since 0.4.1
- *
  */
 @Experimental
 public class SmartContentSelector implements Selector {

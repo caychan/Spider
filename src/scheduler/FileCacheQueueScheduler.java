@@ -26,8 +26,6 @@ import f_scheduler.BloomFiltereRemover;
 /**
  * Store urls and cursor in files so that a Spider can resume the status when shutdown.<br>
  *
- * @author code4crafter@gmail.com <br>
- * @since 0.2.0
  */
 public class FileCacheQueueScheduler extends DuplicateRemovedScheduler implements MonitorableScheduler {
 

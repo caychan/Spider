@@ -1,31 +1,15 @@
 package inaction;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.interactions.Keyboard;
-
 import pipeline.ConsolePipeline;
-import pipeline.FilePipeline;
-import pipeline.FilePipeline_dd;
 import processor.PageProcessor;
 import clawer.Page;
 import clawer.Site;
 import clawer.Spider;
-import downloader.Downloader;
 import downloader.HttpClientDownloader_change;
-import downloader.SeleniumDownloader;
-import downloader.SeleniumDownloader_dd;
 
 public class Amazon implements PageProcessor  {
 

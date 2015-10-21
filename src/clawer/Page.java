@@ -20,10 +20,8 @@ import utils.UrlUtils;
  * {@link #getResultItems()} get extract results to be used in {@link pipeline.Pipeline}<br>
  * {@link #addTargetRequests(java.util.List)} {@link #addTargetRequest(String)} add urls to fetch                 <br>
  *
- * @author code4crafter@gmail.com <br>
  * @see downloader.Downloader
  * @see processor.PageProcessor
- * @since 0.1.0
  */
 public class Page {
 

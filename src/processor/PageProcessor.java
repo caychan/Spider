@@ -12,10 +12,8 @@ import clawer.Site;
  * how the urls to fetch are detected               <br>
  * how the data are extracted and stored             <br>
  *
- * @author code4crafter@gmail.com <br>
  * @see Site
  * @see Page
- * @since 0.1.0
  */
 public interface PageProcessor {
 

@@ -5,10 +5,7 @@ import org.apache.commons.collections.CollectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author code4crafer@gmail.com
- * @since 0.5.2
- */
+
 public abstract class AbstractSelectable implements Selectable {
 
     protected abstract List<String> getSourceTexts();

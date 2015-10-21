@@ -8,8 +8,6 @@ import java.util.regex.PatternSyntaxException;
 /**
  * Replace selector.<br>
  *
- * @author code4crafter@gmail.com <br>
- * @since 0.1.0
  */
 public class ReplaceSelector implements Selector {
 

@@ -10,8 +10,6 @@ import clawer.Site;
 /**
  * A simple PageProcessor.
  *
- * @author code4crafter@gmail.com <br>
- * @since 0.1.0
  */
 public class SimplePageProcessor implements PageProcessor {
 

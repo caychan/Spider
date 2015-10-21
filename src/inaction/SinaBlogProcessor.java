@@ -4,7 +4,6 @@ import processor.PageProcessor;
 import clawer.Page;
 import clawer.Site;
 import clawer.Spider;
-import downloader.HttpClientDownloader;
 
 
 public class SinaBlogProcessor implements PageProcessor {

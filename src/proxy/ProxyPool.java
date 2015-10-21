@@ -19,9 +19,7 @@ import java.util.concurrent.DelayQueue;
 /**
  * Pooled Proxy Object
  *
- * @author yxssfxwzy@sina.com <br>
  * @see Proxy
- * @since 0.5.1
  */
 public class ProxyPool {
 

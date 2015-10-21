@@ -3,9 +3,7 @@ package utils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * @author yihua.huang@dianping.com
- */
+
 public class NumberUtils {
 
 	public static String getTime(){

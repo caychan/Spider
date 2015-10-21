@@ -13,9 +13,7 @@ import java.util.*;
 /**
  * Object contains setting for crawler.<br>
  *
- * @author code4crafter@gmail.com <br>
  * @see processor.PageProcessor
- * @since 0.1.0
  */
 public class Site {
 

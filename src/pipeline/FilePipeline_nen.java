@@ -1,22 +1,13 @@
 package pipeline;
 
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.sound.midi.Soundbank;
-import javax.swing.border.TitledBorder;
-
 import org.apache.http.annotation.ThreadSafe;
-import org.jboss.netty.handler.queue.BufferedWriteHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,8 +20,6 @@ import clawer.Task;
 /**
  * Store results in files.<br>
  *
- * @author code4crafter@gmail.com <br>
- * @since 0.1.0
  */
 @ThreadSafe
 public class FilePipeline_nen extends FilePersistentBase implements Pipeline {

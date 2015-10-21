@@ -12,8 +12,6 @@ import java.util.List;
 /**
  * CSS selector. Based on Jsoup.
  *
- * @author code4crafter@gmail.com <br>
- * @since 0.1.0
  */
 public class CssSelector extends BaseElementSelector {
 

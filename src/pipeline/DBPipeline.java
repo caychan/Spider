@@ -1,6 +1,5 @@
 package pipeline;
 
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,6 +12,7 @@ import utils.NumberUtils;
 import clawer.Page;
 import clawer.ResultItems;
 import clawer.Task;
+
 
 public class DBPipeline implements Pipeline{
 	

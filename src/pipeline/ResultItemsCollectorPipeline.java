@@ -7,10 +7,7 @@ import clawer.Page;
 import clawer.ResultItems;
 import clawer.Task;
 
-/**
- * @author code4crafter@gmail.com
- * @since 0.4.0
- */
+
 public class ResultItemsCollectorPipeline implements CollectorPipeline<ResultItems> {
 
     private List<ResultItems> collector = new ArrayList<ResultItems>();

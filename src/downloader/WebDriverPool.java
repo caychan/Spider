@@ -15,11 +15,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 import utils.UtilsConstants;
 
-/**
- * @author code4crafter@gmail.com <br>
- * Date: 13-7-26 <br>
- * Time: 下午1:41 <br>
- */
+
 class WebDriverPool {
     private Logger logger = Logger.getLogger(getClass());
 

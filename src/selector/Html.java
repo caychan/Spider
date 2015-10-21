@@ -13,8 +13,6 @@ import java.util.List;
 /**
  * Selectable html.<br>
  *
- * @author code4crafter@gmail.com <br>
- * @since 0.1.0
  */
 public class Html extends HtmlNode {
 

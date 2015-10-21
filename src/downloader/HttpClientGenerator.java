@@ -20,10 +20,7 @@ import clawer.Site;
 import java.io.IOException;
 import java.util.Map;
 
-/**
- * @author code4crafter@gmail.com <br>
- * @since 0.4.0
- */
+
 public class HttpClientGenerator {
 
     private PoolingHttpClientConnectionManager connectionManager;

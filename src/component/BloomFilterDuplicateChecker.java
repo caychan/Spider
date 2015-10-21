@@ -18,11 +18,7 @@ import clawer.Task;
 import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnels;
 
-*//**
- * 
- * todo:TODO
- * @author dyliu
- *//*
+
 public class BloomFilterDuplicateChecker implements DuplicateRemover {
 	protected Logger logger = LoggerFactory.getLogger(getClass());
 

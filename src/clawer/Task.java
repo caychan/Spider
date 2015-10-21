@@ -2,11 +2,6 @@ package clawer;
 
 /**
  * Interface for identifying different tasks.<br>
- *
- * @author code4crafter@gmail.com <br>
- * @since 0.1.0
- * @see scheduler.Scheduler
- * @see pipeline.Pipeline
  */
 public interface Task {
 

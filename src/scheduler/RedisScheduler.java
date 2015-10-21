@@ -14,8 +14,6 @@ import component.DuplicateRemover;
 /**
  * Use Redis as url scheduler for distributed crawlers.<br>
  *
- * @author code4crafter@gmail.com <br>
- * @since 0.2.0
  */
 public class RedisScheduler extends DuplicateRemovedScheduler implements MonitorableScheduler, DuplicateRemover {
 

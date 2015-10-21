@@ -17,9 +17,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Pooled Proxy Object
- * 
- * @author yxssfxwzy@sina.com <br>
- * @since 0.5.1
  */
 
 public class ProxyUtils {

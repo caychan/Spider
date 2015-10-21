@@ -5,8 +5,6 @@ import clawer.Task;
 
 /**
  * Remove duplicate requests.
- * @author code4crafer@gmail.com
- * @since 0.5.1
  */
 public interface DuplicateRemover {
     /**

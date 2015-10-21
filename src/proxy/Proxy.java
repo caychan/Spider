@@ -49,8 +49,6 @@ import org.apache.http.HttpHost;
 /**
  * Object has these status of lifecycle above.<br>
  * 
- * @author yxssfxwzy@sina.com <br>
- * @since 0.5.1
  * @see ProxyPool
  */
 

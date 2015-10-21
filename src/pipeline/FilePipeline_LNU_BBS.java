@@ -19,9 +19,7 @@ import clawer.Task;
 
 /**
  * Store results in files.<br>
- *
- * @author code4crafter@gmail.com <br>
- * @since 0.1.0
+ * 
  */
 @ThreadSafe
 public class FilePipeline_LNU_BBS extends FilePersistentBase implements Pipeline {

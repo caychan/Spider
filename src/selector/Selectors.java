@@ -3,8 +3,6 @@ package selector;
 /**
  * Convenient methods for selectors.<br>
  *
- * @author code4crafter@gmail.com <br>
- * @since 0.2.1
  */
 public abstract class Selectors {
 
